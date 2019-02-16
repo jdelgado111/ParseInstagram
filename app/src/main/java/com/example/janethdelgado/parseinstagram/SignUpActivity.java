@@ -8,78 +8,69 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
-public class LoginActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
 
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = "SignUpActivity";
 
     private EditText etUsername;
     private EditText etPassword;
-    private Button btnLogin;
+    private EditText etEmail;
     private Button btnSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        //current signed in user is persisted across app restarts
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null)
-            goMainActivity();
+        setContentView(R.layout.activity_sign_up);
 
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
+        etEmail = findViewById(R.id.etEmail);
         btnSignUp = findViewById(R.id.btnSignUp);
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                login(username, password);
-            }
-        });
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUp();
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
+                String email = etEmail.getText().toString();
+                signUp(username, password, email);
             }
         });
     }
 
+    private void signUp(String username, String password, String email) {
+        // Create the ParseUser
+        ParseUser user = new ParseUser();
 
-    private void login(String username, String password) {
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
+        // Set core properties
+        user.setUsername(etUsername.getText().toString());
+        user.setPassword(etPassword.getText().toString());
+        user.setEmail(etEmail.getText().toString());
+
+        user.signUpInBackground(new SignUpCallback() {
             @Override
-            public void done(ParseUser user, ParseException e) {
+            public void done(ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "Issue with login");
+                    Log.e(TAG, "Issue with sign up");
                     e.printStackTrace();
                     return;
                 }
 
-                // navigate to new activity if the user has signed in properly
+                // navigate to new activity if the user has signed up properly
                 goMainActivity();
             }
         });
-    }
-
-    private void signUp() {
-        Intent i = new Intent(this, SignUpActivity.class);
-        startActivity(i);
     }
 
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
 
-        //prevents user going back to this screen after logging in
+        //prevents user going back to this screen after signing up
         finish();
     }
 }
