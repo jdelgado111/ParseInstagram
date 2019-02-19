@@ -14,7 +14,10 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="none"
-        android:hint="Description..." />
+        android:hint="Description..."
+        android:padding="15dp"
+        android:background="@drawable/edittext"
+        android:layout_marginBottom="15dp" />
 
     <Button
         android:id="@+id/btnCaptureImage"

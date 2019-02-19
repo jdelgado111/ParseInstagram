@@ -9,13 +9,23 @@
     tools:context=".SignUpActivity"
     android:layout_margin="10dp">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:src="@drawable/nav_logo_whiteout"
+        android:layout_marginBottom="15dp"/>
+
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:hint="username" />
+        android:hint="username"
+        android:padding="15dp"
+        android:background="@drawable/edittext"
+        android:layout_marginBottom="15dp" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -27,7 +37,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="password"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:padding="15dp"
+            android:background="@drawable/edittext"
+            android:layout_marginBottom="15dp" />
     </android.support.design.widget.TextInputLayout>
 
     <EditText
@@ -36,12 +49,18 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:hint="email" />
+        android:hint="email"
+        android:padding="15dp"
+        android:background="@drawable/edittext"
+        android:layout_marginBottom="15dp" />
 
     <Button
         android:id="@+id/btnSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign Up" />
+        android:text="Sign Up"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:background="@drawable/button2"/>
 
 </LinearLayout>
