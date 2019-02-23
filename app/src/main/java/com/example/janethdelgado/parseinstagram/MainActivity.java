@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.example.janethdelgado.parseinstagram.fragments.ComposeFragment;
 import com.example.janethdelgado.parseinstagram.fragments.PostsFragment;
+import com.example.janethdelgado.parseinstagram.fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_profile:
                     default:
                         //Toast.makeText(MainActivity.this, "Profile", Toast.LENGTH_SHORT).show();
-                        fragment = new ComposeFragment();
+                        fragment = new ProfileFragment();
                         break;
                 }
 
@@ -52,10 +53,5 @@ public class MainActivity extends AppCompatActivity {
 
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
-
-        //check if posts returned
-        //queryPosts();
     }
-
-    /**/
 }

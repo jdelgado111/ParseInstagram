@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,8 +27,10 @@ public class PostsFragment extends Fragment {
     private final String TAG = "PostsFragment";
 
     private RecyclerView rvPosts;
-    private PostsAdapter adapter;
-    private List<Post> mPosts;
+    protected PostsAdapter adapter;
+    protected List<Post> mPosts;
+
+    protected SwipeRefreshLayout swipeContainer;
 
     //onCreateView to inflate the view
     @Nullable
@@ -38,6 +41,11 @@ public class PostsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_dark);
+
         rvPosts = view.findViewById(R.id.rvPosts);
 
         //create the data source
@@ -55,11 +63,21 @@ public class PostsFragment extends Fragment {
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         queryPosts();
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d("TwitterClient", "content is being refreshed");
+                queryPosts();
+            }
+        });
     }
 
-    private void queryPosts() {
+    protected void queryPosts() {
         ParseQuery<Post> postQuery = new ParseQuery<Post>(Post.class);
         postQuery.include(Post.KEY_USER);
+        postQuery.setLimit(20); //set max number of posts
+        postQuery.addDescendingOrder(Post.KEY_CREATED_AT);  //show posts in reverse chronological order
         postQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
@@ -70,15 +88,23 @@ public class PostsFragment extends Fragment {
                 }
 
                 //add retrieved List of posts to our adapter-connected List
-                mPosts.addAll(posts);
-                adapter.notifyDataSetChanged();
+                //mPosts.addAll(posts);
+                //adapter.notifyDataSetChanged();
+
+                //clear the existing data
+                adapter.clearPosts();
+                //show the data we just received
+                adapter.addPosts(posts);
+
+                // Now we call setRefreshing(false) to signal refresh has finished
+                swipeContainer.setRefreshing(false);
 
                 //log for debugging purposes
-                for (int i = 0; i < posts.size(); i++) {
+                /*for (int i = 0; i < posts.size(); i++) {
                     Post post = posts.get(i);
                     Log.d(TAG, "Post: " + post.getDescription() +
                             ", username: " + post.getUser().getUsername());
-                }
+                }*/
             }
         });
     }
